@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -48,6 +48,8 @@ async function MovieContent({ id }: { id: number }) {
   const runtime = movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : null;
   const releaseYear = movie.release_date?.slice(0, 4);
   const score = movie.vote_average?.toFixed(1);
+
+  const [player, setPlayer] = useState<number>(1);
 
   return (
     <div className="min-h-screen bg-[#141414]">
@@ -244,7 +246,54 @@ async function MovieContent({ id }: { id: number }) {
             </div>
           </div>
         )}
-
+          <div className=" flex space-x-4 justify-center items-center">
+        <button
+          className="bg-primary font-bold rounded p-1"
+          onClick={() => setPlayer(1)}
+        >
+          player 1
+        </button>
+        <button
+          className="bg-primary font-bold rounded p-1"
+          onClick={() => setPlayer(2)}
+        >
+          player 2
+        </button>
+      </div>
+      <div className="flex justify-center items-center p-4">
+        {(() => {
+          switch (player) {
+            case 1:
+              return (
+                <iframe
+                  allowFullScreen
+                  className="rounded"
+                  src={`https://multiembed.mov/directstream.php?video_id=${movie.id}&tmdb=1`}
+                  title={movie.title}
+                  width="1000"
+                  height="600"
+                ></iframe>
+              );
+            case 2:
+              return (
+                <iframe
+                  allowFullScreen
+                  className="rounded"
+                  src={`https://www.2embed.cc/embed/${movie.id}`}
+                  title={movie.title}
+                  width="1000"
+                  height="600"
+                ></iframe>
+              );
+            default:
+              return (
+                <div>
+                  <h1>no player found</h1>
+                </div>
+              );
+          }
+        })()}
+      </div>
         {/* Similar */}
         {similar.length > 0 && (
           <div className="mt-10">
