@@ -27,7 +27,7 @@ export default function MoviePlayer({ movieId, title }: { movieId: number; title
           <iframe
             allowFullScreen
             className="rounded"
-            src={`https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`}
+            src={`https://vidsrc-embed.ru/embed/movie?tmdb=${movieId}`}
             title={title}
             width="1000"
             height="600"
