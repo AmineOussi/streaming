@@ -95,3 +95,20 @@ export async function fetchAiringToday() {
 export async function fetchSimilar(mediaType: "movie" | "tv", id: number) {
   return tmdbFetch(`/${mediaType}/${id}/similar`);
 }
+
+export async function fetchSeasonDetails(showId: number, seasonNumber: number) {
+  return tmdbFetch(`/tv/${showId}/season/${seasonNumber}`, {
+    append_to_response: "credits,videos",
+  });
+}
+
+export async function fetchEpisodeDetails(
+  showId: number,
+  seasonNumber: number,
+  episodeNumber: number
+) {
+  return tmdbFetch(
+    `/tv/${showId}/season/${seasonNumber}/episode/${episodeNumber}`,
+    { append_to_response: "credits,videos" }
+  );
+}

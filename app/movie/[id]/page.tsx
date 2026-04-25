@@ -7,6 +7,7 @@ import { FiClock, FiCalendar, FiGlobe } from "react-icons/fi";
 import { fetchMovieDetails, fetchOmdbData, fetchSimilar, getImageUrl } from "@/lib/tmdb";
 import ImdbBadge from "@/components/ImdbBadge";
 import MovieRow from "@/components/MovieRow";
+import CastSection from "@/components/CastSection";
 import type { Metadata } from "next";
 import type { CastMember, Video } from "@/lib/types";
 import MoviePlayer from "@/components/VideoPlayer";
@@ -45,7 +46,7 @@ async function MovieContent({ id }: { id: number }) {
     (v: Video) => v.type === "Trailer" && v.site === "YouTube"
   );
 
-  const cast: CastMember[] = movie.credits?.cast?.slice(0, 10) || [];
+  const cast: CastMember[] = movie.credits?.cast || [];
   const runtime = movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : null;
   const releaseYear = movie.release_date?.slice(0, 4);
   const score = movie.vote_average?.toFixed(1);
@@ -219,30 +220,7 @@ async function MovieContent({ id }: { id: number }) {
         {/* Cast */}
         {cast.length > 0 && (
           <div className="mt-10 max-w-6xl">
-            <h2 className="text-white font-bold text-lg mb-4">Cast</h2>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-              {cast.map((member) => (
-                <div key={member.id} className="shrink-0 w-24 md:w-28 text-center">
-                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden bg-gray-800 mb-2 ring-2 ring-white/10 mx-auto">
-                    {member.profile_path ? (
-                      <Image
-                        src={getImageUrl(member.profile_path, "w300")}
-                        alt={member.name}
-                        width={112}
-                        height={112}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500 text-2xl font-bold">
-                        {member.name[0]}
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-white text-xs font-semibold leading-tight line-clamp-2">{member.name}</p>
-                  <p className="text-gray-500 text-xs line-clamp-1 mt-0.5">{member.character}</p>
-                </div>
-              ))}
-            </div>
+            <CastSection cast={cast} />
           </div>
         )}
 

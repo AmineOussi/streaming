@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 
-export default function MoviePlayer({ movieId, title }: { movieId: number; title: string }) {
+interface TVPlayerProps {
+  showId: number;
+  seasonNumber: number;
+  episodeNumber: number;
+  title: string;
+}
+
+export default function TVPlayer({ showId, seasonNumber, episodeNumber, title }: TVPlayerProps) {
   const [player, setPlayer] = useState<number>(1);
 
   return (
@@ -35,7 +42,7 @@ export default function MoviePlayer({ movieId, title }: { movieId: number; title
           <iframe
             allowFullScreen
             className="absolute inset-0 w-full h-full"
-            src={`https://vidsrc-embed.ru/embed/movie?tmdb=${movieId}`}
+            src={`https://vidsrc-embed.ru/embed/tv?tmdb=${showId}&season=${seasonNumber}&episode=${episodeNumber}`}
             title={title}
           />
         )}
@@ -43,7 +50,7 @@ export default function MoviePlayer({ movieId, title }: { movieId: number; title
           <iframe
             allowFullScreen
             className="absolute inset-0 w-full h-full"
-            src={`https://www.2embed.cc/embed/${movieId}`}
+            src={`https://www.2embed.cc/embedtv/${showId}&s=${seasonNumber}&e=${episodeNumber}`}
             title={title}
           />
         )}
