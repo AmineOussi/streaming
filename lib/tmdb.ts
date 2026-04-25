@@ -57,8 +57,16 @@ export async function fetchShowDetails(id: number) {
   return tmdbFetch(`/tv/${id}`, { append_to_response: "external_ids,videos,credits" });
 }
 
-export async function searchMulti(query: string) {
-  return tmdbFetch("/search/multi", { query, include_adult: "false" });
+export async function searchMulti(query: string, page = 1) {
+  return tmdbFetch("/search/multi", { query, include_adult: "false", page: String(page) });
+}
+
+export async function searchMovies(query: string, page = 1) {
+  return tmdbFetch("/search/movie", { query, include_adult: "false", page: String(page) });
+}
+
+export async function searchShows(query: string, page = 1) {
+  return tmdbFetch("/search/tv", { query, include_adult: "false", page: String(page) });
 }
 
 export async function fetchOmdbData(imdbId: string) {

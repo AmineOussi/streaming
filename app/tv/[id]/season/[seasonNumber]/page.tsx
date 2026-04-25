@@ -2,9 +2,10 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FaArrowLeft, FaStar, FaPlay } from "react-icons/fa";
-import { FiCalendar, FiClock } from "react-icons/fi";
+import { FaArrowLeft, FaStar } from "react-icons/fa";
+import { FiCalendar } from "react-icons/fi";
 import { fetchShowDetails, fetchSeasonDetails, getImageUrl } from "@/lib/tmdb";
+import EpisodeList from "@/components/EpisodeList";
 import type { Metadata } from "next";
 import type { Episode } from "@/lib/types";
 
@@ -116,76 +117,9 @@ async function SeasonContent({
           </div>
         </div>
 
-        {/* Episode list */}
-        <div className="max-w-6xl space-y-3">
-          {episodes.map((ep) => (
-            <Link
-              key={ep.id}
-              href={`/tv/${showId}/season/${seasonNumber}/episode/${ep.episode_number}`}
-              className="flex gap-0 bg-white/5 hover:bg-white/10 transition-colors rounded-xl overflow-hidden border border-white/5 group"
-            >
-              {/* Still image */}
-              <div className="shrink-0 w-36 md:w-48 aspect-video relative bg-gray-800 overflow-hidden">
-                {ep.still_path ? (
-                  <Image
-                    src={getImageUrl(ep.still_path, "w300")}
-                    alt={ep.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 768px) 144px, 192px"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <FaPlay size={18} className="text-gray-600" />
-                  </div>
-                )}
-                {/* Hover play overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <FaPlay size={13} className="text-white ml-0.5" />
-                  </div>
-                </div>
-                {/* Episode number badge */}
-                <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded">
-                  E{ep.episode_number}
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="flex-1 p-3 md:p-4 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="text-white font-semibold text-sm md:text-base line-clamp-1">
-                    {ep.name}
-                  </h3>
-                  <div className="shrink-0 flex items-center gap-2 text-xs text-gray-400">
-                    {ep.runtime && (
-                      <span className="flex items-center gap-1">
-                        <FiClock size={11} />
-                        {ep.runtime}m
-                      </span>
-                    )}
-                    {ep.vote_average > 0 && (
-                      <span className="flex items-center gap-1 text-yellow-400 font-medium">
-                        <FaStar size={10} />
-                        {ep.vote_average.toFixed(1)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {ep.air_date && (
-                  <p className="text-gray-500 text-xs mb-1.5 flex items-center gap-1">
-                    <FiCalendar size={11} />
-                    {ep.air_date}
-                  </p>
-                )}
-                {ep.overview && (
-                  <p className="text-gray-400 text-xs md:text-sm leading-relaxed line-clamp-2">
-                    {ep.overview}
-                  </p>
-                )}
-              </div>
-            </Link>
-          ))}
+        {/* Episode list with layout toggle */}
+        <div className="max-w-6xl">
+          <EpisodeList episodes={episodes} showId={showId} seasonNumber={seasonNumber} />
         </div>
       </div>
     </div>
