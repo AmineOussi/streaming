@@ -9,6 +9,7 @@ import ImdbBadge from "@/components/ImdbBadge";
 import MovieRow from "@/components/MovieRow";
 import type { Metadata } from "next";
 import type { CastMember, Video } from "@/lib/types";
+import MoviePlayer from "@/components/VideoPlayer";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -244,6 +245,8 @@ async function MovieContent({ id }: { id: number }) {
             </div>
           </div>
         )}
+
+        <MoviePlayer movieId={movie.id} title={movie.title} />
 
         {/* Similar */}
         {similar.length > 0 && (
