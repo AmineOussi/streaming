@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #141414;
+  --bg-primary: #0e1520;
 }
 
 * {
@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  background-color: #141414;
+  background-color: #0e1520;
   color: white;
   font-family: "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -36,7 +36,7 @@ body {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background: linear-gradient(90deg, #141e2e 25%, #1e2d45 50%, #141e2e 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;

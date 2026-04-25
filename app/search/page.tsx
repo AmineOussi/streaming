@@ -117,7 +117,7 @@ export default async function SearchPage({ searchParams }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#141414] pt-24 px-4 md:px-12 pb-12">
+    <div className="min-h-screen bg-[#0e1520] pt-6 px-4 md:px-8 pb-12">
       <SearchBar initialQuery={q} />
 
       <div className="flex gap-2 mb-8">
