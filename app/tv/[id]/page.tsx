@@ -7,8 +7,9 @@ import { FiCalendar, FiTv } from "react-icons/fi";
 import { fetchShowDetails, fetchOmdbData, fetchSimilar, getImageUrl } from "@/lib/tmdb";
 import ImdbBadge from "@/components/ImdbBadge";
 import MovieRow from "@/components/MovieRow";
+import CastSection from "@/components/CastSection";
 import type { Metadata } from "next";
-import type { CastMember, Video } from "@/lib/types";
+import type { CastMember, Video, ShowSeason } from "@/lib/types";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -38,13 +39,18 @@ async function ShowContent({ id }: { id: number }) {
   const imdbId = show.external_ids?.imdb_id || show.imdb_id;
   const omdb = imdbId ? await fetchOmdbData(imdbId) : null;
 
-  const trailer = show.videos?.results?.find(
-    (v: Video) => v.type === "Trailer" && v.site === "YouTube" && v.official
-  ) || show.videos?.results?.find(
-    (v: Video) => v.type === "Trailer" && v.site === "YouTube"
-  );
+  const trailer =
+    show.videos?.results?.find(
+      (v: Video) => v.type === "Trailer" && v.site === "YouTube" && v.official
+    ) ||
+    show.videos?.results?.find(
+      (v: Video) => v.type === "Trailer" && v.site === "YouTube"
+    );
 
-  const cast: CastMember[] = show.credits?.cast?.slice(0, 10) || [];
+  const cast: CastMember[] = show.credits?.cast || [];
+  const seasons: ShowSeason[] = (show.seasons || []).filter(
+    (s: ShowSeason) => s.season_number > 0
+  );
   const startYear = show.first_air_date?.slice(0, 4);
   const score = show.vote_average?.toFixed(1);
 
@@ -119,7 +125,9 @@ async function ShowContent({ id }: { id: number }) {
               {show.name}
             </h1>
             {show.tagline && (
-              <p className="text-gray-400 italic mb-4 text-sm md:text-base">&ldquo;{show.tagline}&rdquo;</p>
+              <p className="text-gray-400 italic mb-4 text-sm md:text-base">
+                &ldquo;{show.tagline}&rdquo;
+              </p>
             )}
 
             {/* Meta */}
@@ -143,7 +151,9 @@ async function ShowContent({ id }: { id: number }) {
                 <span className="flex items-center gap-1 text-yellow-400 font-semibold">
                   <FaStar size={12} />
                   {score}
-                  <span className="text-gray-500 font-normal">({show.vote_count?.toLocaleString()})</span>
+                  <span className="text-gray-500 font-normal">
+                    ({show.vote_count?.toLocaleString()})
+                  </span>
                 </span>
               )}
             </div>
@@ -228,33 +238,48 @@ async function ShowContent({ id }: { id: number }) {
           </div>
         )}
 
-        {/* Cast */}
-        {cast.length > 0 && (
+        {/* Seasons */}
+        {seasons.length > 0 && (
           <div className="mt-10 max-w-6xl">
-            <h2 className="text-white font-bold text-lg mb-4">Cast</h2>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-              {cast.map((member) => (
-                <div key={member.id} className="shrink-0 w-24 md:w-28 text-center">
-                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden bg-gray-800 mb-2 ring-2 ring-white/10 mx-auto">
-                    {member.profile_path ? (
+            <h2 className="text-white font-bold text-lg mb-4">Seasons</h2>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+              {seasons.map((season) => (
+                <Link
+                  key={season.id}
+                  href={`/tv/${id}/season/${season.season_number}`}
+                  className="group bg-white/5 hover:bg-white/10 transition-colors rounded-xl overflow-hidden border border-white/5"
+                >
+                  <div className="aspect-[2/3] relative bg-gray-800 overflow-hidden">
+                    {season.poster_path ? (
                       <Image
-                        src={getImageUrl(member.profile_path, "w300")}
-                        alt={member.name}
-                        width={112}
-                        height={112}
-                        className="w-full h-full object-cover"
+                        src={getImageUrl(season.poster_path, "w300")}
+                        alt={season.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 17vw"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500 text-2xl font-bold">
-                        {member.name[0]}
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm text-center p-2">
+                        {season.name}
                       </div>
                     )}
                   </div>
-                  <p className="text-white text-xs font-semibold leading-tight line-clamp-2">{member.name}</p>
-                  <p className="text-gray-500 text-xs line-clamp-1 mt-0.5">{member.character}</p>
-                </div>
+                  <div className="p-2.5">
+                    <p className="text-white text-xs font-semibold line-clamp-1">{season.name}</p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      {season.episode_count} ep{season.episode_count !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+                </Link>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Cast */}
+        {cast.length > 0 && (
+          <div className="mt-10 max-w-6xl">
+            <CastSection cast={cast} />
           </div>
         )}
 

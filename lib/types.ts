@@ -86,6 +86,44 @@ export interface CastMember {
   order: number;
 }
 
+export interface ShowSeason {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  episode_count: number;
+  air_date: string | null;
+  vote_average: number;
+}
+
+export interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  still_path: string | null;
+  episode_number: number;
+  season_number: number;
+  air_date: string | null;
+  runtime: number | null;
+  vote_average: number;
+  vote_count: number;
+  guest_stars?: CastMember[];
+  videos?: { results: Video[] };
+  credits?: { cast: CastMember[] };
+}
+
+export interface SeasonDetails {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  air_date: string | null;
+  vote_average: number;
+  episodes: Episode[];
+}
+
 export interface MovieRow {
   title: string;
   fetchUrl: string;
