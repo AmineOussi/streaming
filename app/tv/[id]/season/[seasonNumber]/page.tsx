@@ -47,7 +47,7 @@ async function SeasonContent({
   const airYear = season.air_date?.slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-[#141414]">
+    <div className="min-h-screen bg-[#0e1520]">
       {/* Backdrop header */}
       <div className="relative h-[30vh] min-h-[200px] overflow-hidden">
         {show.backdrop_path ? (
@@ -62,12 +62,12 @@ async function SeasonContent({
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#141414]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0e1520] via-[#0e1520]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0e1520]/60 to-transparent" />
 
         <Link
           href={`/tv/${showId}`}
-          className="absolute top-20 left-4 md:left-12 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm"
+          className="absolute top-4 left-4 md:left-12 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm"
         >
           <FaArrowLeft size={12} />
           {show.name}
@@ -130,7 +130,7 @@ export default function SeasonPage({ params }: Props) {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#141414] flex items-center justify-center">
+        <div className="min-h-screen bg-[#0e1520] flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
         </div>
       }

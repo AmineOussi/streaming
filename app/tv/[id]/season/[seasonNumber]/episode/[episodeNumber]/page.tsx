@@ -64,9 +64,9 @@ async function EpisodeContent({
   const eCode = String(episodeNumber).padStart(2, "0");
 
   return (
-    <div className="min-h-screen bg-[#141414]">
+    <div className="min-h-screen bg-[#0e1520]">
       {/* Breadcrumb nav */}
-      <div className="px-4 md:px-12 pt-20 pb-4 flex items-center gap-1.5 text-sm text-gray-500 flex-wrap">
+      <div className="px-4 md:px-12 pt-4 pb-4 flex items-center gap-1.5 text-sm text-gray-500 flex-wrap">
         <Link href={`/tv/${showId}`} className="hover:text-white transition-colors truncate max-w-[140px]">
           {show.name}
         </Link>
@@ -206,7 +206,7 @@ export default function EpisodePage({ params }: Props) {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#141414] flex items-center justify-center">
+        <div className="min-h-screen bg-[#0e1520] flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
         </div>
       }
