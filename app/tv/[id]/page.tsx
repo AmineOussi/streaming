@@ -86,13 +86,13 @@ async function ShowContent({ id }: { id: number }) {
       <div className="px-4 md:px-12 -mt-32 md:-mt-48 relative z-10">
         <div className="flex flex-col md:flex-row gap-6 md:gap-10 max-w-6xl">
           {/* Poster */}
-          <div className="shrink-0 w-40 md:w-56 lg:w-64 self-start rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+          <div className="shrink-0 w-52 md:w-72 lg:w-96 self-start rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
             {show.poster_path ? (
               <Image
-                src={getImageUrl(show.poster_path, "w500")}
+                src={getImageUrl(show.poster_path, "w780")}
                 alt={show.name}
-                width={256}
-                height={384}
+                width={384}
+                height={576}
                 className="w-full h-auto"
               />
             ) : (
