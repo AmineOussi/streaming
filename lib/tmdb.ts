@@ -21,32 +21,32 @@ async function tmdbFetch(endpoint: string, params: Record<string, string> = {}) 
   return res.json();
 }
 
-export async function fetchTrending(mediaType: "all" | "movie" | "tv" = "all", timeWindow: "day" | "week" = "week") {
-  return tmdbFetch(`/trending/${mediaType}/${timeWindow}`);
+export async function fetchTrending(mediaType: "all" | "movie" | "tv" = "all", timeWindow: "day" | "week" = "week", page = 1) {
+  return tmdbFetch(`/trending/${mediaType}/${timeWindow}`, { page: String(page) });
 }
 
-export async function fetchPopularMovies() {
-  return tmdbFetch("/movie/popular");
+export async function fetchPopularMovies(page = 1) {
+  return tmdbFetch("/movie/popular", { page: String(page) });
 }
 
-export async function fetchTopRatedMovies() {
-  return tmdbFetch("/movie/top_rated");
+export async function fetchTopRatedMovies(page = 1) {
+  return tmdbFetch("/movie/top_rated", { page: String(page) });
 }
 
-export async function fetchPopularShows() {
-  return tmdbFetch("/tv/popular");
+export async function fetchPopularShows(page = 1) {
+  return tmdbFetch("/tv/popular", { page: String(page) });
 }
 
-export async function fetchTopRatedShows() {
-  return tmdbFetch("/tv/top_rated");
+export async function fetchTopRatedShows(page = 1) {
+  return tmdbFetch("/tv/top_rated", { page: String(page) });
 }
 
-export async function fetchMoviesByGenre(genreId: number) {
-  return tmdbFetch("/discover/movie", { with_genres: String(genreId), sort_by: "popularity.desc" });
+export async function fetchMoviesByGenre(genreId: number, page = 1) {
+  return tmdbFetch("/discover/movie", { with_genres: String(genreId), sort_by: "popularity.desc", page: String(page) });
 }
 
-export async function fetchShowsByGenre(genreId: number) {
-  return tmdbFetch("/discover/tv", { with_genres: String(genreId), sort_by: "popularity.desc" });
+export async function fetchShowsByGenre(genreId: number, page = 1) {
+  return tmdbFetch("/discover/tv", { with_genres: String(genreId), sort_by: "popularity.desc", page: String(page) });
 }
 
 export async function fetchMovieDetails(id: number) {

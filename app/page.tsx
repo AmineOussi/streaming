@@ -2,50 +2,48 @@ export const dynamic = "force-dynamic";
 
 import { Suspense } from "react";
 import HeroBanner from "@/components/HeroBanner";
-import GenreGrid from "@/components/GenreGrid";
+import MovieRow from "@/components/MovieRow";
 import {
   fetchTrending,
   fetchPopularMovies,
+  fetchPopularShows,
+  fetchTopRatedMovies,
+  fetchTopRatedShows,
   fetchMoviesByGenre,
+  fetchShowsByGenre,
 } from "@/lib/tmdb";
 import ApiKeyBanner from "@/components/ApiKeyBanner";
+import type { Movie } from "@/lib/types";
 
 async function HomeContent() {
   const [
     trending,
-    popular,
-    adventure,
+    popularMovies,
+    popularTV,
+    topRatedMovies,
+    topRatedTV,
     action,
     comedy,
-    crime,
-    drama,
-    fantasy,
     horror,
+    drama,
+    sciFi,
   ] = await Promise.all([
     fetchTrending("all", "week").then((r) => r.results || []),
     fetchPopularMovies().then((r) => r.results || []),
-    fetchMoviesByGenre(12).then((r) => r.results || []),
+    fetchPopularShows().then((r) => r.results || []),
+    fetchTopRatedMovies().then((r) => r.results || []),
+    fetchTopRatedShows().then((r) => r.results || []),
     fetchMoviesByGenre(28).then((r) => r.results || []),
     fetchMoviesByGenre(35).then((r) => r.results || []),
-    fetchMoviesByGenre(80).then((r) => r.results || []),
-    fetchMoviesByGenre(18).then((r) => r.results || []),
-    fetchMoviesByGenre(14).then((r) => r.results || []),
     fetchMoviesByGenre(27).then((r) => r.results || []),
+    fetchMoviesByGenre(18).then((r) => r.results || []),
+    fetchMoviesByGenre(878).then((r) => r.results || []),
   ]);
 
   const noApiKey = !process.env.TMDB_API_KEY && !process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
-  const genres = [
-    { label: "Trending", movies: trending },
-    { label: "Adventure", movies: adventure, mediaType: "movie" as const },
-    { label: "Action", movies: action, mediaType: "movie" as const },
-    { label: "Comedy", movies: comedy, mediaType: "movie" as const },
-    { label: "Crime", movies: crime, mediaType: "movie" as const },
-    { label: "Drama", movies: drama, mediaType: "movie" as const },
-    { label: "Fantasy", movies: fantasy, mediaType: "movie" as const },
-    { label: "Horror", movies: horror, mediaType: "movie" as const },
-    { label: "Popular", movies: popular, mediaType: "movie" as const },
-  ];
+  const tag = <T extends Movie>(arr: T[], type: "movie" | "tv") =>
+    arr.map((m) => ({ ...m, media_type: type as const }));
 
   return (
     <>
@@ -57,8 +55,66 @@ async function HomeContent() {
           <p className="text-gray-400">Add your TMDB API key to get started</p>
         </div>
       )}
-      <div className="mt-4">
-        <GenreGrid genres={genres} />
+      <div className="mt-6 pb-8">
+        <MovieRow
+          title="Trending This Week"
+          movies={trending}
+          seeMoreHref="/browse?category=trending"
+        />
+        <MovieRow
+          title="Popular Movies"
+          movies={tag(popularMovies, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=popular-movies"
+        />
+        <MovieRow
+          title="Popular TV Shows"
+          movies={tag(popularTV, "tv")}
+          mediaType="tv"
+          seeMoreHref="/browse?category=popular-tv"
+        />
+        <MovieRow
+          title="Top Rated Movies"
+          movies={tag(topRatedMovies, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=top-rated-movies"
+        />
+        <MovieRow
+          title="Top Rated TV Shows"
+          movies={tag(topRatedTV, "tv")}
+          mediaType="tv"
+          seeMoreHref="/browse?category=top-rated-tv"
+        />
+        <MovieRow
+          title="Action"
+          movies={tag(action, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=genre&genreId=28&mediaType=movie&name=Action+Movies"
+        />
+        <MovieRow
+          title="Comedy"
+          movies={tag(comedy, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=genre&genreId=35&mediaType=movie&name=Comedy+Movies"
+        />
+        <MovieRow
+          title="Horror"
+          movies={tag(horror, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=genre&genreId=27&mediaType=movie&name=Horror+Movies"
+        />
+        <MovieRow
+          title="Drama"
+          movies={tag(drama, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=genre&genreId=18&mediaType=movie&name=Drama"
+        />
+        <MovieRow
+          title="Sci-Fi"
+          movies={tag(sciFi, "movie")}
+          mediaType="movie"
+          seeMoreHref="/browse?category=genre&genreId=878&mediaType=movie&name=Sci-Fi+Movies"
+        />
       </div>
     </>
   );
@@ -66,18 +122,18 @@ async function HomeContent() {
 
 function HomeLoading() {
   return (
-    <div className="p-6 space-y-4">
-      <div className="rounded-2xl skeleton" style={{ height: "clamp(260px, 42vh, 400px)" }} />
-      <div className="flex gap-2 mt-6 mb-5">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-8 w-20 skeleton rounded-full" />
-        ))}
-      </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-        {Array.from({ length: 18 }).map((_, i) => (
-          <div key={i} className="aspect-[2/3] skeleton rounded-xl" />
-        ))}
-      </div>
+    <div className="p-4 space-y-8">
+      <div className="rounded-2xl skeleton" style={{ height: "clamp(300px, 50vh, 460px)" }} />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="space-y-3">
+          <div className="h-5 w-40 skeleton rounded" />
+          <div className="flex gap-3 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, j) => (
+              <div key={j} className="aspect-[2/3] skeleton rounded-lg shrink-0" style={{ width: "clamp(140px, 18vw, 220px)" }} />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
