@@ -101,8 +101,8 @@ export default function HeroBanner({ movies }: Props) {
             <Image
               src={getImageUrl(movie.poster_path, "w300")}
               alt={title}
-              width={300}
-              height={450}
+              width={128}
+              height={192}
               className="w-full h-auto block"
             />
           </div>
