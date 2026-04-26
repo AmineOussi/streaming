@@ -17,11 +17,6 @@ export default function TopBar() {
 
   return (
     <div className="flex items-center gap-3 px-6 py-4 border-b border-white/5 shrink-0">
-      {/* Type selector */}
-      <button className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm font-medium shrink-0 hover:bg-white/10 transition-colors">
-        Movies
-        <FiChevronDown size={14} />
-      </button>
 
       {/* Search */}
       <form onSubmit={handleSearch} className="flex-1 relative max-w-lg">
@@ -36,12 +31,7 @@ export default function TopBar() {
           placeholder="Movies, series, shows..."
           className="w-full bg-white/5 border border-white/8 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-white/20 transition-colors"
         />
-        <button
-          type="button"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
-        >
-          <FiSliders size={15} />
-        </button>
+      
       </form>
 
       <div className="flex items-center gap-2 ml-auto">
