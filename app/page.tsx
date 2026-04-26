@@ -42,8 +42,8 @@ async function HomeContent() {
 
   const noApiKey = !process.env.TMDB_API_KEY && !process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
-  const tag = <T extends Movie>(arr: T[], type: "movie" | "tv") =>
-    arr.map((m) => ({ ...m, media_type: type as const }));
+  const tag = (arr: Movie[], type: "movie" | "tv") =>
+    arr.map((m) => ({ ...m, media_type: type }));
 
   return (
     <>
