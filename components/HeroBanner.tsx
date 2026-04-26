@@ -95,18 +95,7 @@ export default function HeroBanner({ movies }: Props) {
           </div>
         )}
 
-        {/* Full poster — right side, vertically centered */}
-        {movie.poster_path && (
-          <div className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-[88px] sm:w-[108px] md:w-[128px] rounded-xl overflow-hidden shadow-2xl ring-2 ring-white/15">
-            <Image
-              src={getImageUrl(movie.poster_path, "w300")}
-              alt={title}
-              width={128}
-              height={192}
-              className="w-full h-auto block"
-            />
-          </div>
-        )}
+        
 
         {/* Bottom row — padded right so it never overlaps the poster */}
         <div
