@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPlay, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
+import { FiChevronDown } from "react-icons/fi";
 import { Movie } from "@/lib/types";
 import { getImageUrl } from "@/lib/tmdb";
 
@@ -18,6 +19,12 @@ export default function HeroBanner({ movies }: Props) {
   const featured = movies.slice(0, FEATURED_COUNT).filter(Boolean);
   const [index, setIndex] = useState(0);
   const [liked, setLiked] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  function scrollDown() {
+    const next = containerRef.current?.nextElementSibling as HTMLElement | null;
+    next?.scrollIntoView({ behavior: "smooth" });
+  }
 
   useEffect(() => {
     if (featured.length <= 1) return;
@@ -40,7 +47,7 @@ export default function HeroBanner({ movies }: Props) {
       : null;
 
   return (
-    <div className="px-4 pt-4 pb-2">
+    <div ref={containerRef} className="px-4 pt-4 pb-2">
       <div
         className="relative rounded-2xl overflow-hidden w-full"
         style={{ height: "clamp(1000px, 50vh, 460px)" }}
@@ -99,7 +106,7 @@ export default function HeroBanner({ movies }: Props) {
 
         {/* Bottom row — padded right so it never overlaps the poster */}
         <div
-          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-4"
+          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-12"
           style={{ paddingRight: "calc(88px + 28px)" }}
         >
           <Link
@@ -110,10 +117,10 @@ export default function HeroBanner({ movies }: Props) {
               <FaPlay size={11} className="text-white ml-0.5" />
             </div>
             <div className="leading-tight min-w-0">
-              <p className="text-white font-bold text-sm md:text-base line-clamp-1">
+              <p className="text-white font-bold text-2xl md:text-3xl line-clamp-1">
                 {title}
               </p>
-              <p className="text-gray-400 text-xs mt-0.5">Play trailer</p>
+              <p className="text-gray-400 text-sm md:text-base mt-0.5">Play trailer</p>
             </div>
           </Link>
 
@@ -128,6 +135,15 @@ export default function HeroBanner({ movies }: Props) {
             {liked ? <FaHeart size={13} /> : <FaRegHeart size={13} />}
           </button>
         </div>
+
+        {/* Scroll-down arrow */}
+        <button
+          onClick={scrollDown}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors animate-bounce"
+          aria-label="Scroll to content"
+        >
+          <FiChevronDown size={16} />
+        </button>
       </div>
     </div>
   );
