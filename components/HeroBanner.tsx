@@ -34,15 +34,16 @@ export default function HeroBanner({ movies }: Props) {
   const title = movie.title || movie.name || "Unknown";
   const mediaType = movie.media_type || "movie";
   const year = (movie.release_date || movie.first_air_date || "").slice(0, 4);
-  const score = movie.vote_average && movie.vote_average > 0
-    ? movie.vote_average.toFixed(1)
-    : null;
+  const score =
+    movie.vote_average && movie.vote_average > 0
+      ? movie.vote_average.toFixed(1)
+      : null;
 
   return (
     <div className="px-4 pt-4 pb-2">
       <div
         className="relative rounded-2xl overflow-hidden w-full"
-        style={{ height: "clamp(280px, 46vh, 420px)" }}
+        style={{ height: "clamp(300px, 50vh, 460px)" }}
       >
         {/* Backdrop */}
         {movie.backdrop_path ? (
@@ -58,8 +59,9 @@ export default function HeroBanner({ movies }: Props) {
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
         )}
 
-        {/* Subtle bottom gradient for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
         {/* Tags — top left */}
         <div className="absolute top-3.5 left-4 flex items-center gap-1.5">
@@ -79,7 +81,10 @@ export default function HeroBanner({ movies }: Props) {
             {featured.map((_, i) => (
               <button
                 key={i}
-                onClick={() => { setIndex(i); setLiked(false); }}
+                onClick={() => {
+                  setIndex(i);
+                  setLiked(false);
+                }}
                 className={`rounded-full transition-all duration-300 ${
                   i === index
                     ? "w-6 h-2 bg-white"
@@ -90,28 +95,42 @@ export default function HeroBanner({ movies }: Props) {
           </div>
         )}
 
-        {/* Bottom row */}
-        <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-4">
-          {/* Play + title */}
+        {/* Full poster — right side, vertically centered */}
+        {movie.poster_path && (
+          <div className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-[88px] sm:w-[108px] md:w-[128px] rounded-xl overflow-hidden shadow-2xl ring-2 ring-white/15">
+            <Image
+              src={getImageUrl(movie.poster_path, "w300")}
+              alt={title}
+              width={128}
+              height={192}
+              className="w-full h-auto block"
+            />
+          </div>
+        )}
+
+        {/* Bottom row — padded right so it never overlaps the poster */}
+        <div
+          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-4"
+          style={{ paddingRight: "calc(88px + 28px)" }}
+        >
           <Link
             href={`/${mediaType}/${movie.id}`}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-3 group min-w-0"
           >
             <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-black/70 transition-colors shrink-0">
               <FaPlay size={11} className="text-white ml-0.5" />
             </div>
-            <div className="leading-tight">
-              <p className="text-white font-bold text-sm md:text-base line-clamp-1 max-w-[260px]">
+            <div className="leading-tight min-w-0">
+              <p className="text-white font-bold text-sm md:text-base line-clamp-1">
                 {title}
               </p>
               <p className="text-gray-400 text-xs mt-0.5">Play trailer</p>
             </div>
           </Link>
 
-          {/* Heart */}
           <button
             onClick={() => setLiked(!liked)}
-            className={`w-9 h-9 rounded-full border backdrop-blur-sm flex items-center justify-center transition-colors shrink-0 ${
+            className={`w-9 h-9 rounded-full border backdrop-blur-sm flex items-center justify-center transition-colors shrink-0 ml-3 ${
               liked
                 ? "bg-red-600/40 border-red-400 text-red-400"
                 : "bg-black/40 border-white/20 text-white/70 hover:text-white hover:border-white/50"
