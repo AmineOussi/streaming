@@ -39,54 +39,75 @@ export default function HeroBanner({ movies }: Props) {
 
   const title = movie.title || movie.name || "Unknown";
   const mediaType = movie.media_type || "movie";
+  const year = (movie.release_date || movie.first_air_date || "").slice(0, 4);
+  const score =
+    movie.vote_average && movie.vote_average > 0
+      ? movie.vote_average.toFixed(1)
+      : null;
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full overflow-hidden"
-      style={{ height: "clamp(400px, 56vw, 760px)" }}
-    >
-      {/* Backdrop */}
-      {movie.backdrop_path ? (
-        <Image
-          src={getImageUrl(movie.backdrop_path, "original")}
-          alt={title}
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
-      )}
+    <div ref={containerRef} className="px-4 pt-4 pb-2">
+      <div
+        className="relative rounded-2xl overflow-hidden w-full"
+        style={{ height: "clamp(1000px, 50vh, 460px)" }}
+      >
+        {/* Backdrop */}
+        {movie.backdrop_path ? (
+          <Image
+            src={getImageUrl(movie.backdrop_path, "original")}
+            alt={title}
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="100vw"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
+        )}
 
-      {/* Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0e1520] via-[#0e1520]/20 to-transparent" />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-      {/* Pagination dots — top right */}
-      {featured.length > 1 && (
-        <div className="absolute top-5 right-5 flex items-center gap-1.5 z-10">
-          {featured.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === index
-                  ? "w-6 h-2 bg-white"
-                  : "w-2 h-2 bg-white/30 hover:bg-white/55"
-              }`}
-            />
-          ))}
+        {/* Tags — top left */}
+        <div className="absolute top-3.5 left-4 flex items-center gap-1.5">
+          <Tag>{mediaType === "tv" ? "Series" : "Movie"}</Tag>
+          {year && <Tag>{year}</Tag>}
+          {score && (
+            <Tag>
+              <FaStar size={9} className="inline mr-0.5 text-yellow-400" />
+              {score}
+            </Tag>
+          )}
         </div>
-      )}
 
-      {/* Bottom-left: title + buttons */}
-      <div className="absolute bottom-16 left-8 md:left-14 lg:left-16 z-10 max-w-sm md:max-w-xl lg:max-w-2xl">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight mb-5 drop-shadow-2xl">
-          {title}
-        </h1>
-        <div className="flex items-center gap-3 flex-wrap">
+        {/* Pagination dots — top right */}
+        {featured.length > 1 && (
+          <div className="absolute top-4 right-4 flex items-center gap-1.5">
+            {featured.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setIndex(i);
+                  setLiked(false);
+                }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-6 h-2 bg-white"
+                    : "w-2 h-2 bg-white/30 hover:bg-white/55"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
+        
+
+        {/* Bottom row — padded right so it never overlaps the poster */}
+        <div
+          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-12"
+          style={{ paddingRight: "calc(88px + 28px)" }}
+        >
           <Link
             href={`/${mediaType}/${movie.id}`}
             className="flex items-center gap-2 bg-white text-black font-bold px-7 py-2.5 rounded text-base hover:bg-white/85 transition-colors"
