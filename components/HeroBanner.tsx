@@ -43,7 +43,7 @@ export default function HeroBanner({ movies }: Props) {
     <div className="px-4 pt-4 pb-2">
       <div
         className="relative rounded-2xl overflow-hidden w-full"
-        style={{ height: "clamp(800px, 50vh, 460px)" }}
+        style={{ height: "clamp(950px, 50vh, 460px)" }}
       >
         {/* Backdrop */}
         {movie.backdrop_path ? (
