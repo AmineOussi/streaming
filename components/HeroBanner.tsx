@@ -50,7 +50,7 @@ export default function HeroBanner({ movies }: Props) {
     <div ref={containerRef} className="px-4 pt-4 pb-2">
       <div
         className="relative rounded-2xl overflow-hidden w-full"
-        style={{ height: "clamp(1000px, 50vh, 460px)" }}
+        style={{ height: "calc(100vh - 5.5rem)" }}
       >
         {/* Backdrop */}
         {movie.backdrop_path ? (
@@ -71,12 +71,12 @@ export default function HeroBanner({ movies }: Props) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
         {/* Tags — top left */}
-        <div className="absolute top-3.5 left-4 flex items-center gap-1.5">
+        <div className="absolute top-4 left-5 flex items-center gap-2">
           <Tag>{mediaType === "tv" ? "Series" : "Movie"}</Tag>
           {year && <Tag>{year}</Tag>}
           {score && (
             <Tag>
-              <FaStar size={9} className="inline mr-0.5 text-yellow-400" />
+              <FaStar size={18} className="inline mr-1 text-yellow-400" />
               {score}
             </Tag>
           )}
@@ -102,11 +102,9 @@ export default function HeroBanner({ movies }: Props) {
           </div>
         )}
 
-        
-
-        {/* Bottom row — padded right so it never overlaps the poster */}
+        {/* Bottom row */}
         <div
-          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-12"
+          className="absolute bottom-0 left-0 right-0 flex items-end justify-between px-4 pb-28"
           style={{ paddingRight: "calc(88px + 28px)" }}
         >
           <Link
@@ -117,10 +115,10 @@ export default function HeroBanner({ movies }: Props) {
               <FaPlay size={11} className="text-white ml-0.5" />
             </div>
             <div className="leading-tight min-w-0">
-              <p className="text-white font-bold text-2xl md:text-3xl line-clamp-1">
+              <p className="text-white font-bold text-4xl md:text-5xl line-clamp-1">
                 {title}
               </p>
-              <p className="text-gray-400 text-sm md:text-base mt-0.5">Play trailer</p>
+              <p className="text-gray-400 text-base md:text-lg mt-0.5">Play trailer</p>
             </div>
           </Link>
 
@@ -139,10 +137,10 @@ export default function HeroBanner({ movies }: Props) {
         {/* Scroll-down arrow */}
         <button
           onClick={scrollDown}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors animate-bounce"
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors animate-bounce z-10"
           aria-label="Scroll to content"
         >
-          <FiChevronDown size={16} />
+          <FiChevronDown size={48} />
         </button>
       </div>
     </div>
@@ -151,7 +149,7 @@ export default function HeroBanner({ movies }: Props) {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="bg-black/55 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-0.5">
+    <span className="bg-black/55 backdrop-blur-md text-white text-xl font-medium px-4 py-2 rounded-full border border-white/10 flex items-center gap-1">
       {children}
     </span>
   );
