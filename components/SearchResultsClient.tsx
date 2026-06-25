@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import type { Movie } from "@/lib/types";
+import { matchesGenre } from "@/lib/genres";
 
 const IMAGE_BASE = "https://image.tmdb.org/t/p";
 
@@ -14,9 +15,10 @@ interface Props {
   totalPages: number;
   query?: string;
   type?: string;
+  genre?: string;
 }
 
-export default function SearchResultsClient({ initialResults, totalPages, query, type }: Props) {
+export default function SearchResultsClient({ initialResults, totalPages, query, type, genre }: Props) {
   const [results, setResults] = useState<Movie[]>(initialResults);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -65,14 +67,18 @@ export default function SearchResultsClient({ initialResults, totalPages, query,
     return () => observer.disconnect();
   }, [loadMore]);
 
-  if (results.length === 0) {
+  const visibleResults = genre
+    ? results.filter((r) => matchesGenre(r.genre_ids, r.media_type, genre))
+    : results;
+
+  if (visibleResults.length === 0) {
     return (
       <div className="text-center py-20">
         <FiSearch className="text-gray-600 mx-auto mb-4" size={48} />
         <p className="text-gray-400 text-lg">
           No results found{query ? ` for "${query}"` : ""}
         </p>
-        <p className="text-gray-600 text-sm mt-2">Try a different title or keyword</p>
+        <p className="text-gray-600 text-sm mt-2">Try a different title, keyword, or genre</p>
       </div>
     );
   }
@@ -80,7 +86,7 @@ export default function SearchResultsClient({ initialResults, totalPages, query,
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
-        {results.map((item) => (
+        {visibleResults.map((item) => (
           <SearchCard key={`${item.media_type}-${item.id}`} item={item} />
         ))}
       </div>

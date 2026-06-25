@@ -100,8 +100,8 @@ export async function fetchAiringToday() {
   return tmdbFetch("/tv/airing_today");
 }
 
-export async function fetchSimilar(mediaType: "movie" | "tv", id: number) {
-  return tmdbFetch(`/${mediaType}/${id}/similar`);
+export async function fetchRecommendations(mediaType: "movie" | "tv", id: number) {
+  return tmdbFetch(`/${mediaType}/${id}/recommendations`);
 }
 
 export async function fetchSeasonDetails(showId: number, seasonNumber: number) {
