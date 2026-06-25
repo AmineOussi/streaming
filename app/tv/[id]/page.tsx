@@ -4,7 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaPlay, FaPlus, FaArrowLeft, FaStar } from "react-icons/fa";
 import { FiCalendar, FiTv } from "react-icons/fi";
-import { fetchShowDetails, fetchOmdbData, fetchSimilar, getImageUrl } from "@/lib/tmdb";
+import { fetchShowDetails, fetchOmdbData, fetchRecommendations, getImageUrl } from "@/lib/tmdb";
+import { getGenreNameById } from "@/lib/genres";
 import ImdbBadge from "@/components/ImdbBadge";
 import MovieRow from "@/components/MovieRow";
 import CastSection from "@/components/CastSection";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 async function ShowContent({ id }: { id: number }) {
   const [show, similar] = await Promise.all([
     fetchShowDetails(id),
-    fetchSimilar("tv", id).then((r) => r.results || []),
+    fetchRecommendations("tv", id).then((r) => r.results || []),
   ]);
 
   if (!show || show.status_code === 34) notFound();
@@ -83,7 +84,7 @@ async function ShowContent({ id }: { id: number }) {
       </div>
 
       {/* Content */}
-      <div className="px-4 md:px-12 -mt-32 md:-mt-48 relative z-10">
+      <div className="px-4 md:px-12 -mt-32 md:-mt-120 relative z-10">
         <div className="flex flex-col md:flex-row gap-6 md:gap-10 max-w-6xl">
           {/* Poster */}
           <div className="shrink-0 w-52 md:w-72 lg:w-96 self-start rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
@@ -161,14 +162,25 @@ async function ShowContent({ id }: { id: number }) {
             {/* Genres */}
             {show.genres?.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
-                {show.genres.map((g: { id: number; name: string }) => (
-                  <span
-                    key={g.id}
-                    className="bg-white/10 text-white/80 text-xs px-3 py-1 rounded-full border border-white/10"
-                  >
-                    {g.name}
-                  </span>
-                ))}
+                {show.genres.map((g: { id: number; name: string }) => {
+                  const genreName = getGenreNameById(g.id, "tv");
+                  return genreName ? (
+                    <Link
+                      key={g.id}
+                      href={`/search?type=tv&genre=${encodeURIComponent(genreName)}`}
+                      className="bg-white/10 text-white/80 text-xs px-3 py-1 rounded-full border border-white/10 hover:bg-white/20 hover:text-white transition-colors"
+                    >
+                      {g.name}
+                    </Link>
+                  ) : (
+                    <span
+                      key={g.id}
+                      className="bg-white/10 text-white/80 text-xs px-3 py-1 rounded-full border border-white/10"
+                    >
+                      {g.name}
+                    </span>
+                  );
+                })}
               </div>
             )}
 

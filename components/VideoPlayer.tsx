@@ -6,7 +6,7 @@ export default function MoviePlayer({ movieId, title }: { movieId: number; title
   const [player, setPlayer] = useState<number>(1);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mt-10 flex flex-col gap-4">
       <div className="flex space-x-3 justify-center items-center">
         <button
           className={`font-bold rounded-lg px-4 py-2 text-sm transition-colors ${

@@ -10,11 +10,12 @@ import {
   fetchTrending,
 } from "@/lib/tmdb";
 import SearchResultsClient from "@/components/SearchResultsClient";
+import GenreFilterSelect from "@/components/GenreFilterSelect";
 import type { Movie } from "@/lib/types";
 import type { Metadata } from "next";
 
 interface Props {
-  searchParams: Promise<{ q?: string; type?: string }>;
+  searchParams: Promise<{ q?: string; type?: string; genre?: string }>;
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
@@ -24,7 +25,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   };
 }
 
-async function SearchResults({ query, type }: { query?: string; type?: string }) {
+async function SearchResults({
+  query,
+  type,
+  genre,
+}: {
+  query?: string;
+  type?: string;
+  genre?: string;
+}) {
   let results: Movie[] = [];
   let totalPages = 1;
   let title = "Trending This Week";
@@ -72,11 +81,12 @@ async function SearchResults({ query, type }: { query?: string; type?: string })
     <div>
       <h1 className="text-white font-bold text-xl md:text-2xl mb-6">{title}</h1>
       <SearchResultsClient
-        key={`${query ?? ""}-${type ?? ""}`}
+        key={`${query ?? ""}-${type ?? ""}-${genre ?? ""}`}
         initialResults={results}
         totalPages={totalPages}
         query={query}
         type={type}
+        genre={genre}
       />
     </div>
   );
@@ -100,7 +110,7 @@ function SearchSkeleton() {
 }
 
 export default async function SearchPage({ searchParams }: Props) {
-  const { q, type } = await searchParams;
+  const { q, type, genre } = await searchParams;
 
   const filterTabs = [
     { label: "All", type: undefined },
@@ -112,6 +122,7 @@ export default async function SearchPage({ searchParams }: Props) {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (tabType) params.set("type", tabType);
+    if (genre) params.set("genre", genre);
     const qs = params.toString();
     return `/search${qs ? `?${qs}` : ""}`;
   };
@@ -120,7 +131,7 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className="min-h-screen bg-[#0e1520] pt-6 px-4 md:px-8 pb-12">
       <SearchBar initialQuery={q} />
 
-      <div className="flex gap-2 mb-8">
+      <div className="flex flex-wrap items-center gap-2 mb-8">
         {filterTabs.map((tab) => {
           const active =
             (tab.type === undefined && !type) ||
@@ -139,10 +150,12 @@ export default async function SearchPage({ searchParams }: Props) {
             </Link>
           );
         })}
+
+        <GenreFilterSelect query={q} type={type} genre={genre} />
       </div>
 
       <Suspense fallback={<SearchSkeleton />}>
-        <SearchResults query={q} type={type} />
+        <SearchResults query={q} type={type} genre={genre} />
       </Suspense>
     </div>
   );
